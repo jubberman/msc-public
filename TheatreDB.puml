@@ -11,52 +11,64 @@
     !define desc(x) <color:gray>(x)</color>
     !define refers(x) <i><color:green>x</color></i>
     !define FK(x) <color:#424897><<FK>></color>  x<color:#000></color>
-    !define PK(x) <color:#973A4A><<PK>></color> x : INTEGER desc(generated)
+    !define PK(x) <color:#973A4A><<PK>></color> x
 
-    title Group 5: New Bank
+    title Film - Showtimes Database
 
-    header Entity Relationship Diagram
-    footer Group 5
-
-    entity "Customer" {
-    PK(Id)
+    entity "Persons" {
+    PK(PersonID)
     --
-    *UserName : VARCHAR
-    *FirstName : VARCHAR
-    *LastName : VARCHAR
-    *DateOfBirth : DATE
-    *Created: DATETIMEOFFSET
-    *Modified: DATETIMEOFFSET
+    *Name
+    *DoB
+    }
+    
+    entity "Ratings" {
+    PK(FK(ViewerID)) refers(Persons.PersonID)
+    PK(FK(FilmID)) refers(Films.FilmID)
+    --
+    *Rating
     }
 
-    entity "Ledger" {
-    PK(Id)
+    entity "Films" {
+    PK(FilmID)
     --
-    *FK(FromAccount) : INTEGER refers(Customer.Id)
-    *FK(ToAccount) : INTEGER refers(Customer.Id)
-    *Amount : DOUBLE
-    *CommittedOn : DATETIME
+    *Title
+    *FK(DirectorID) refers(Persons.PersonID)
     }
 
-    entity "AccountTypes" {
-    PK(Id)
-    --
-    *(AccountType) : VARCHAR
-    *InterestRate : DOUBLE
+    entity "Cast" {
+    PK(FK(FilmID)) refers(Films.FilmID)
+    PK(FK(ActorID)) refers(Persons.PersonID)   
     }
 
-    entity "Accounts" {
-    PK(Id)
+    entity "Theatres" {
+    PK(TheatreID)
     --
-    *FK(CustomerID) : INTEGER
-    *FK(AccountTypeID) : INTEGER
-    *Balance : DOUBLE
+    *Name
+    *Location
     }
 
+    entity "Screens" {
+    PK(ScreenID)
+    --
+    *FK(Theatre) refers(Theatres.TheatreID)
+    *ScreenNumber
+    }
+
+    entity "Showtimes" {
+    PK(FK(Film)) refers(Films.FilmID)
+    PK(FK(Screen)) refers(Screens.ScreenID)
+    PK(ShowTime)
+    }
 
     ' relationships
-    Customer }o-- Accounts
-    Accounts }|-- AccountTypes
-    Ledger }|--|{ Accounts
+    Theatres --> Screens
+    Showtimes <-- Screens
+    Persons --> Cast
+    Persons --> Films
+    Films --> Showtimes
+    Films --> Ratings
+    Persons --> Ratings
+    Films --> Cast
 @enduml
 
