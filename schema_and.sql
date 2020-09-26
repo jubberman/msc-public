@@ -14,7 +14,6 @@ CREATE TABLE Cast
 CREATE TABLE Theatres
     (TheatreID INTEGER NOT NULL AUTO_INCREMENT,
      Name VARCHAR(40),
-     Screens INTEGER,
      Location VARCHAR(40),
      PRIMARY KEY (TheatreID));
 
