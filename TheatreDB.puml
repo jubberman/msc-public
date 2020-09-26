@@ -1,0 +1,62 @@
+@startuml
+
+    ' remove the spot
+    hide circle
+    ' avoid problems with angled crows feet
+    skinparam linetype ortho
+    ' font
+    skinparam defaultFontName Arial
+
+    ' define styles
+    !define desc(x) <color:gray>(x)</color>
+    !define refers(x) <i><color:green>x</color></i>
+    !define FK(x) <color:#424897><<FK>></color>  x<color:#000></color>
+    !define PK(x) <color:#973A4A><<PK>></color> x : INTEGER desc(generated)
+
+    title Group 5: New Bank
+
+    header Entity Relationship Diagram
+    footer Group 5
+
+    entity "Customer" {
+    PK(Id)
+    --
+    *UserName : VARCHAR
+    *FirstName : VARCHAR
+    *LastName : VARCHAR
+    *DateOfBirth : DATE
+    *Created: DATETIMEOFFSET
+    *Modified: DATETIMEOFFSET
+    }
+
+    entity "Ledger" {
+    PK(Id)
+    --
+    *FK(FromAccount) : INTEGER refers(Customer.Id)
+    *FK(ToAccount) : INTEGER refers(Customer.Id)
+    *Amount : DOUBLE
+    *CommittedOn : DATETIME
+    }
+
+    entity "AccountTypes" {
+    PK(Id)
+    --
+    *(AccountType) : VARCHAR
+    *InterestRate : DOUBLE
+    }
+
+    entity "Accounts" {
+    PK(Id)
+    --
+    *FK(CustomerID) : INTEGER
+    *FK(AccountTypeID) : INTEGER
+    *Balance : DOUBLE
+    }
+
+
+    ' relationships
+    Customer }o-- Accounts
+    Accounts }|-- AccountTypes
+    Ledger }|--|{ Accounts
+@enduml
+
